@@ -3,6 +3,8 @@ const bodyParse=require('body-parser')
 const express=require("express")
 var morgan = require("morgan");
 const bodyParser = require('body-parser');
+const config=require('./config.json')
+
 const app=  express();
 
 const members=[
@@ -130,9 +132,9 @@ MembersRouter.route('/')
     })
 
 
-app.use('/api/v1/members',MembersRouter);
+app.use(config.rootAPI+'members',MembersRouter);
 
-app.listen(8080,()=>{
+app.listen(config.port,()=>{
     console.log("Started on port 8080");
 })
 
