@@ -66,7 +66,7 @@ app.post('/api/v1/members',(req,res)=>{
         if(name_ok){
              let new_member={
                         name:req.body.name,
-                        id:members.length+1
+                        id:createID()
                     };
             members.push(new_member)
             res.json(success(new_member));
@@ -107,6 +107,21 @@ app.put('/api/v1/members/:id',(req,res)=>{
 
 
 
+app.delete('/api/v1/members/:id',(req,res)=>{
+    let index=getIndex(req.params.id);
+    if(typeof index =='string'){
+        res.json(error(index))
+    }else{
+
+        members.splice(index,1)
+    }
+
+
+
+})
+
+
+
 
 app.listen(8080,()=>{
     console.log("Started on port 8080");
@@ -120,8 +135,14 @@ function getIndex(id){
         if(element.id==id){
             return i;
         }
+
         
     }
     return 'Wrong Id';
 }
 
+
+function createID(){
+    let lastMember=members[members.length-1].id+1;
+    return lastMember;
+}
