@@ -2,6 +2,8 @@ const {checkAndChange} = require('./assets/functions')
 const mysql = require('promise-mysql')
 const bodyParser = require('body-parser')
 const express = require('express')
+const expressOasgenerator= require('express-oas-generator')
+
 const morgan = require('morgan')('dev')
 const config = require('./assets/config')
 
@@ -12,9 +14,10 @@ mysql.createConnection({
     password: config.db.password
 }).then((db) => {
 
-    console.log('Connected.')
+    console.log('Connected to Mysql DB.')
 
     const app = express()
+    expressOasgenerator.init(app,{})
 
     let MembersRouter = express.Router()
     let Members = require('./assets/classes/Members_class')(db, config)
