@@ -1,11 +1,12 @@
 const express=require("express")
+var morgan = require("morgan")
 const app=  express();
 
-app.use((req,res,next)=>{
-    console.log('URL : '+req.url);
-    next();
-})
-
+// app.use((req,res,next)=>{
+//     console.log('URL : '+req.url);
+//     next();
+// })
+app.use(morgan("dev"));
 
 
 app.get('/api',(req,res)=>{
