@@ -12,8 +12,9 @@ const db = mysql.createConnection({
     password:config.db.password
 })
 
-db.connect((err) => {
+const Members=require('./assets/classes/Members_class')(db,config)
 
+db.connect((err) => {
     if (err)
         console.log(err.message)
     else {
