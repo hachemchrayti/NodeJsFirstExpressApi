@@ -19,109 +19,118 @@ const members=[
         name:'Dhafer'
     }
 ]
+
+let MembersRouter=express.Router();
+
+
 app.use(morgan("dev"));
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({extended:true}))
 
-//http://localhost:8080/Api/v1/members/1
-app.get('/api/v1/members/:id',(req,res)=>{
-    let index=getIndex(req.params.id);
-    if(typeof index =='string'){
-        res.json(error(index))
-    }else{
-        res.json(success(members[index]) );
-    }
-    
-});
 
-//http://localhost:8080/Api/v1/members or //http://localhost:8080/Api/v1/members?max=:max
-app.get('/api/v1/members',(req,res)=>{
-    if(req.query.max!=undefined && req.query.max>0) {
-        res.json(success(members.slice(0,req.query.max)) );
-    }else if(req.query.max!=undefined){
-        res.json(error('Wrong max value') );
-    }else{
-        res.json(success(members) );
-    }
-    
-});
-
-
-app.get('/api/v1/members/',(req,res)=>{
-
-    res.json(success(members) );
-});
-
-
-app.post('/api/v1/members',(req,res)=>{
-    let name_ok=true;
-   if(req.body.name){
-        for(let i=0;i<members.length;i++){
-            if(members[i].name==req.body.name){
-                name_ok=false;
-                res.json(error('Name already taken'))
-            }
-        }     
-
-        if(name_ok){
-             let new_member={
-                        name:req.body.name,
-                        id:createID()
-                    };
-            members.push(new_member)
-            res.json(success(new_member));
-        }
-      
-   }else{
-       res.json(console.error('Na name value!'))
-   }
-})
-
-app.put('/api/v1/members/:id',(req,res)=>{
-    let index=getIndex(req.params.id);
-    if(typeof index =='string'){
-        res.json(error(index))
-    }else{
-        let member=members[index];
-        let same=false;
-        for (let i = 0; i < members.length; i++) {
-            const element = members[i];
-            if(element.name==req.body.name && req.params.id!=element.id){
-                same=true;
-                break;
-            }   
-        }
-
-        if(same){
-            res.json(error('Name already exists'))
+MembersRouter.route('/:id')
+    //http://localhost:8080/Api/v1/members/1
+    .get((req,res)=>{
+        let index=getIndex(req.params.id);
+        if(typeof index =='string'){
+            res.json(error(index))
         }else{
-            members[index].name=req.body.name;
-            res.json(success(members[index]));
+            res.json(success(members[index]) );
+        }
+        
+    })
+
+    .put((req,res)=>{
+        let index=getIndex(req.params.id);
+        if(typeof index =='string'){
+            res.json(error(index))
+        }else{
+            let member=members[index];
+            let same=false;
+            for (let i = 0; i < members.length; i++) {
+                const element = members[i];
+                if(element.name==req.body.name && req.params.id!=element.id){
+                    same=true;
+                    break;
+                }   
+            }
+
+            if(same){
+                res.json(error('Name already exists'))
+            }else{
+                members[index].name=req.body.name;
+                res.json(success(members[index]));
+            }
+
+
+            res.json(success(true) );
+        }
+
+    })
+
+
+
+    .delete((req,res)=>{
+        let index=getIndex(req.params.id);
+        if(typeof index =='string'){
+            res.json(error(index))
+        }else{
+
+            members.splice(index,1)
         }
 
 
-        res.json(success(true) );
-    }
 
-})
+    })
 
 
+MembersRouter.route('/')
 
-app.delete('/api/v1/members/:id',(req,res)=>{
-    let index=getIndex(req.params.id);
-    if(typeof index =='string'){
-        res.json(error(index))
+    //http://localhost:8080/Api/v1/members or //http://localhost:8080/Api/v1/members?max=:max
+    .get((req,res)=>{
+        if(req.query.max!=undefined && req.query.max>0) {
+            res.json(success(members.slice(0,req.query.max)) );
+        }else if(req.query.max!=undefined){
+            res.json(error('Wrong max value') );
+        }else{
+            res.json(success(members) );
+        }
+        
+    })
+
+
+    .get((req,res)=>{
+
+        res.json(success(members) );
+    })
+
+
+    .post((req,res)=>{
+        let name_ok=true;
+    if(req.body.name){
+            for(let i=0;i<members.length;i++){
+                if(members[i].name==req.body.name){
+                    name_ok=false;
+                    res.json(error('Name already taken'))
+                }
+            }     
+
+            if(name_ok){
+                let new_member={
+                            name:req.body.name,
+                            id:createID()
+                        };
+                members.push(new_member)
+                res.json(success(new_member));
+            }
+        
     }else{
-
-        members.splice(index,1)
+        res.json(console.error('Na name value!'))
     }
+    })
 
 
-
-})
-
-
-
+app.use('/api/v1/members',MembersRouter);
 
 app.listen(8080,()=>{
     console.log("Started on port 8080");
