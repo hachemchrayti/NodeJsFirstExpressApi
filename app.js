@@ -1,4 +1,4 @@
-const func=require('./functions') 
+const {success,error}=require('./functions')   // c'eest la meme chose func=require('./functions') 
 const bodyParse=require('body-parser') 
 const express=require("express")
 var morgan = require("morgan");
@@ -25,18 +25,23 @@ app.use(bodyParser.urlencoded({extended:true}))
 
 //http://localhost:8080/Api/v1/members/1
 app.get('/api/v1/members/:id',(req,res)=>{
-
-    res.json(func.sucess(members[(req.params.id)-1]) );
+    let index=getIndex(req.params.id);
+    if(typeof index =='string'){
+        res.json(error(index))
+    }else{
+        res.json(sucess(members[index]) );
+    }
+    
 });
 
 //http://localhost:8080/Api/v1/members or //http://localhost:8080/Api/v1/members?max=:max
 app.get('/api/v1/members',(req,res)=>{
     if(req.query.max!=undefined && req.query.max>0) {
-        res.json(func.success(members.slice(0,req.query.max)) );
+        res.json(success(members.slice(0,req.query.max)) );
     }else if(req.query.max!=undefined){
-        res.json(func.error('Wrong max value') );
+        res.json(error('Wrong max value') );
     }else{
-        res.json(func.success(members) );
+        res.json(success(members) );
     }
     
 });
@@ -44,7 +49,7 @@ app.get('/api/v1/members',(req,res)=>{
 
 app.get('/api/v1/members/',(req,res)=>{
 
-    res.json(func.success(members) );
+    res.json(success(members) );
 });
 
 
@@ -54,7 +59,7 @@ app.post('/api/v1/members',(req,res)=>{
         for(let i=0;i<members.length;i++){
             if(members[i].name==req.body.name){
                 name_ok=false;
-                res.json(func.error('Name already taken'))
+                res.json(error('Name already taken'))
             }
         }     
 
@@ -64,7 +69,7 @@ app.post('/api/v1/members',(req,res)=>{
                         id:members.length+1
                     };
             members.push(new_member)
-            res.json(func.success(new_member));
+            res.json(success(new_member));
         }
       
    }else{
@@ -78,5 +83,16 @@ app.listen(8080,()=>{
 })
 
 
+function getIndex(id){
+    for (let i = 0; i < members.length; i++) {
+        const element = members[i];
 
+        if(element.id==id){
+            return i;
+        }else{
+            return 'Wrong Id';
+        }
+        
+    }
+}
 
