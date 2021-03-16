@@ -2,7 +2,10 @@ const {checkAndChange} = require('./assets/functions')
 const mysql = require('promise-mysql')
 const bodyParser = require('body-parser')
 const express = require('express')
-const expressOasgenerator= require('express-oas-generator')
+// const expressOasgenerator= require('express-oas-generator') replaced by swaggr-ui-express
+
+const swaggerUi=require('swagger-ui-express')
+const swaggerDocument=require('./assets/Swagger.json')
 
 const morgan = require('morgan')('dev')
 const config = require('./assets/config')
@@ -17,7 +20,9 @@ mysql.createConnection({
     console.log('Connected to Mysql DB.')
 
     const app = express()
-    expressOasgenerator.init(app,{})
+    //expressOasgenerator.init(app,{})
+
+    app.use(config.rootAPI+'api-docs',swaggerUi.serve,swaggerUi.setup(swaggerDocument));
 
     let MembersRouter = express.Router()
     let Members = require('./assets/classes/Members_class')(db, config)
