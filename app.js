@@ -29,7 +29,7 @@ app.get('/api/v1/members/:id',(req,res)=>{
     if(typeof index =='string'){
         res.json(error(index))
     }else{
-        res.json(sucess(members[index]) );
+        res.json(success(members[index]) );
     }
     
 });
@@ -77,6 +77,36 @@ app.post('/api/v1/members',(req,res)=>{
    }
 })
 
+app.put('/api/v1/members/:id',(req,res)=>{
+    let index=getIndex(req.params.id);
+    if(typeof index =='string'){
+        res.json(error(index))
+    }else{
+        let member=members[index];
+        let same=false;
+        for (let i = 0; i < members.length; i++) {
+            const element = members[i];
+            if(element.name==req.body.name && req.params.id!=element.id){
+                same=true;
+                break;
+            }   
+        }
+
+        if(same){
+            res.json(error('Name already exists'))
+        }else{
+            members[index].name=req.body.name;
+            res.json(success(members[index]));
+        }
+
+
+        res.json(success(true) );
+    }
+
+})
+
+
+
 
 app.listen(8080,()=>{
     console.log("Started on port 8080");
@@ -89,10 +119,9 @@ function getIndex(id){
 
         if(element.id==id){
             return i;
-        }else{
-            return 'Wrong Id';
         }
         
     }
+    return 'Wrong Id';
 }
 
