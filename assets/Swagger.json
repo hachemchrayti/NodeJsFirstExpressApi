@@ -1,73 +1,95 @@
 {
-    "openapi": "3.0.0",
     "info": {
-      "title": "nodejs",
+      "title": "API REST documentation",
       "version": "1.0.0",
       "license": {
         "name": "ISC"
       },
-      "description": "Specification JSONs: [v2](/api-spec/v2), [v3](/api-spec/v3)."
+      "description": "API REST pour gérer des utilisateurs"
     },
+    "basePath": "/api/v1",
+    "host": "localhost:8080",
+    "tags": [
+      {
+        "name": "members",
+        "description": "Méthodes permettant de gérer les utilisateurs"
+      }
+    ],
     "paths": {
-      "/api/v1/members/{id}": {
+      "members/{id}": {
         "get": {
-          "summary": "/api/v1/members/{id}",
+          "tags": ["members"],
+          "summary": "members/{id}",
+          "consumes": [
+            "application/json"
+          ],
           "parameters": [
             {
               "name": "id",
               "in": "path",
-              "required": true,
-              "schema": {
-                "type": "string"
-              }
+              "required": true
             }
-          ],
-          "responses": {},
-          "tags": []
+          ]
         },
         "put": {
-          "summary": "/api/v1/members/{id}",
+          "tags": ["members"],
+          "summary": "members/{id}",
+          "consumes": [
+            "application/json"
+          ],
           "parameters": [
             {
               "name": "id",
               "in": "path",
-              "required": true,
-              "schema": {
-                "type": "string"
-              }
+              "required": true
             }
-          ],
-          "responses": {},
-          "tags": []
+          ]
         },
         "delete": {
-          "summary": "/api/v1/members/{id}",
+          "tags": ["members"],
+          "summary": "members/{id}",
+          "consumes": [
+            "application/json"
+          ],
           "parameters": [
             {
               "name": "id",
               "in": "path",
-              "required": true,
-              "schema": {
-                "type": "string"
-              }
+              "required": true
             }
-          ],
-          "responses": {},
-          "tags": []
+          ]
         }
       },
-      "/api/v1/members": {
+      "members": {
         "get": {
-          "summary": "/api/v1/members",
-          "responses": {},
-          "tags": []
+          "tags": ["members"],
+          "summary": "members",
+          "consumes": [
+            "application/json"
+          ],
+          "parameters": [
+            {
+              "name": "max",
+              "in": "query",
+              "required": false
+            }
+          ]
         },
         "post": {
-          "summary": "/api/v1/members",
-          "responses": {},
-          "tags": []
+          "tags": ["members"],
+          "summary": "members",
+          "consumes": [
+            "application/json"
+          ],
+          "parameters": [
+            {
+              "name": "name",
+              "in": "body",
+              "required": true
+            }
+          ]
         }
       }
     },
-    "tags": []
+    "swagger": "2.0"
   }
